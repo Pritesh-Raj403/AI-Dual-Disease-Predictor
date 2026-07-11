@@ -1,0 +1,741 @@
+
+<h2 class="sr-only">Presentation Q&A and Terminology Guide for Pritesh Raj's AI Disease Prediction Project</h2>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+
+.tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.tab-btn {
+  padding: 8px 18px; border-radius: 20px; border: 0.5px solid var(--color-border-secondary);
+  background: var(--color-background-primary); color: var(--color-text-secondary);
+  cursor: pointer; font-size: 13px; font-weight: 500; transition: all 0.15s;
+}
+.tab-btn.active {
+  background: var(--color-background-info); color: var(--color-text-info);
+  border-color: var(--color-border-info);
+}
+
+.section { display: none; }
+.section.active { display: block; }
+
+.search-box {
+  width: 100%; padding: 10px 14px; border-radius: var(--border-radius-md);
+  border: 0.5px solid var(--color-border-secondary); font-size: 14px;
+  background: var(--color-background-primary); color: var(--color-text-primary);
+  margin-bottom: 16px;
+}
+
+.qa-card {
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  margin-bottom: 10px; overflow: hidden;
+}
+.qa-q {
+  padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between;
+  align-items: flex-start; gap: 12px;
+  background: var(--color-background-secondary);
+}
+.qa-q:hover { background: var(--color-background-tertiary); }
+.qa-q-text { font-size: 13.5px; font-weight: 500; color: var(--color-text-primary); flex: 1; }
+.qa-tag {
+  font-size: 11px; padding: 2px 8px; border-radius: 10px; white-space: nowrap; flex-shrink: 0;
+}
+.tag-hard { background: var(--color-background-danger); color: var(--color-text-danger); }
+.tag-med  { background: var(--color-background-warning); color: var(--color-text-warning); }
+.tag-easy { background: var(--color-background-success); color: var(--color-text-success); }
+.qa-arrow { color: var(--color-text-secondary); font-size: 12px; flex-shrink: 0; margin-top: 2px; }
+
+.qa-a {
+  padding: 0 16px; max-height: 0; overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.2s;
+  font-size: 13px; color: var(--color-text-primary); line-height: 1.7;
+  border-top: 0px solid var(--color-border-tertiary);
+}
+.qa-a.open {
+  max-height: 600px; padding: 14px 16px;
+  border-top: 0.5px solid var(--color-border-tertiary);
+}
+.qa-a p { margin-bottom: 8px; }
+.qa-a strong { font-weight: 500; }
+.tip-box {
+  background: var(--color-background-info); border-radius: var(--border-radius-md);
+  padding: 10px 12px; margin-top: 10px; font-size: 12px; color: var(--color-text-info);
+}
+
+.term-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 10px; }
+.term-card {
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  padding: 14px 16px;
+}
+.term-name { font-size: 13.5px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 6px; }
+.term-cat {
+  font-size: 11px; padding: 2px 8px; border-radius: 10px; display: inline-block; margin-bottom: 8px;
+}
+.cat-ml   { background: var(--color-background-info);    color: var(--color-text-info); }
+.cat-stat { background: var(--color-background-warning);  color: var(--color-text-warning); }
+.cat-data { background: var(--color-background-success);  color: var(--color-text-success); }
+.cat-med  { background: var(--color-background-danger);   color: var(--color-text-danger); }
+.cat-app  { background: var(--color-background-tertiary); color: var(--color-text-secondary); }
+
+.term-def { font-size: 12.5px; color: var(--color-text-secondary); line-height: 1.6; }
+.term-ex  { font-size: 12px; color: var(--color-text-tertiary); margin-top: 6px; font-style: italic; }
+
+.cat-filter { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.cat-btn {
+  padding: 5px 12px; border-radius: 16px; border: 0.5px solid var(--color-border-secondary);
+  background: var(--color-background-primary); color: var(--color-text-secondary);
+  cursor: pointer; font-size: 12px; transition: all 0.15s;
+}
+.cat-btn.active { border-color: var(--color-border-info); background: var(--color-background-info); color: var(--color-text-info); }
+
+.count-badge {
+  display: inline-block; background: var(--color-background-secondary);
+  color: var(--color-text-secondary); font-size: 11px; padding: 1px 7px;
+  border-radius: 10px; margin-left: 6px;
+}
+</style>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('qa')">Questions & Answers</button>
+  <button class="tab-btn" onclick="showTab('terms')">Terminology Guide</button>
+</div>
+
+<!-- Q&A SECTION -->
+<div class="section active" id="qa">
+  <input class="search-box" placeholder="Search questions..." id="qa-search" oninput="filterQA()" />
+
+  <div id="qa-list">
+
+  <!-- TECHNICAL -->
+  <div class="qa-card" data-q="why xgboost best model">
+    <div class="qa-q" onclick="toggleQA(this)">
+      <span class="qa-q-text">Why did XGBoost perform best among all 7 models?</span>
+      <span class="qa-tag tag-hard">Hard</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-a">
+      <p>XGBoost — Extreme Gradient Boosting — builds trees sequentially where each tree corrects the errors of the previous one. It uses second-order gradient approximations and has L1 and L2 regularisation built in, which prevents overfitting.</p>
+      <p>On structured tabular data like clinical datasets, XGBoost consistently outperforms other algorithms because it handles missing values internally, supports feature importance estimation, and is computationally optimised.</p>
+      <div class="tip-box">Bolne ka tarika: "XGBoost uses sequential tree building with regularisation — each tree fixes the errors of the previous one. This makes it very powerful on structured clinical data."</div>
+    </div>
+  </div>
+
+  <div class="qa-card" data-q="smote class imbalance">
+    <div class="qa-q" onclick="toggleQA(this)">
+      <span class="qa-q-text">What is SMOTE and why did you use it?</span>
+      <span class="qa-tag tag-hard">Hard</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-a">
+      <p>SMOTE stands for Synthetic Minority Oversampling Technique. My Framingham dataset had 84.8% negative cases and only 15.2% positive. Without balancing, the model would predict everyone as negative and still achieve 85% accuracy — but it would never detect actual heart disease patients.</p>
+      <p>SMOTE generates synthetic minority class samples by interpolating between existing minority samples in feature space. It does NOT duplicate — it creates new realistic samples. I applied it only to training data, not the test set, to avoid data leakage.</p>
+      <p>Result: Framingham training set went from 3,392 to 5,754 samples — perfectly balanced.</p>
+      <div class="tip-box">Bolne ka tarika: "Without SMOTE, the model was biased towards predicting everyone as healthy. SMOTE fixed the imbalance by generating realistic synthetic minority samples during training only."</div>
+    </div>
+  </div>
+
+  <div class="qa-card" data-q="feature engineering age risk pulse pressure">
+    <div class="qa-q" onclick="toggleQA(this)">
+      <span class="qa-q-text">What is feature engineering and what did you do?</span>
+      <span class="qa-tag tag-hard">Hard</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-a">
+      <p>Feature engineering means creating new input variables from existing ones using domain knowledge, to give the model more meaningful information.</p>
+      <p>I created 4 new features for the Framingham dataset:</p>
+      <p><strong>1. pulse_pressure</strong> = sysBP − diaBP. This captures arterial stiffness, which is a validated cardiovascular risk marker not captured by either BP value alone.</p>
+      <p><strong>2. heavy_smoker</strong> = 1 if cigarettes per day > 20. Heavy smokers have very different CHD risk than light smokers.</p>
+      <p><strong>3. age_risk</strong> = Age grouped into 0-3 (below 40, 40-49, 50-59, 60+). CHD risk increases in step changes each decade.</p>
+      <p><strong>4. bmi_category</strong> = Standard WHO BMI classification (underweight/normal/overweight/obese).</p>
+      <p><strong>Validation:</strong> Feature importance analysis confirmed that age_risk scored 0.218 — the single highest importance — even higher than the original continuous age variable (0.156). This proves the engineering added real predictive value.</p>
+      <div class="tip-box">Ye sabse important unique contribution hai — zaroor mention karo!</div>
+    </div>
+  </div>
+
+  <div class="qa-card" data-q="accuracy 76 percent why not higher 85 90">
+    <div class="qa-q" onclick="toggleQA(this)">
+      <span class="qa-q-text">Why is diabetes accuracy only 76%? Why not 85-90%?</span>
+      <span class="qa-tag tag-hard">Hard</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-a">
+      <p>Three reasons: First, the PIMA dataset has only 768 records — very small. More data generally leads to better accuracy. Second, the dataset has only 8 features, which limits the information available to the model. Third, the existing literature consistently reports 72-82% accuracy on this dataset across all algorithms. My 76.62% is state-of-the-art for this benchmark.</p>
+      <p>Going beyond ~82% on this specific dataset without significantly more data or features would indicate overfitting — the model would be memorising training data rather than learning genuine patterns.</p>
+      <div class="tip-box">Bolne ka tarika: "76.62% is consistent with published literature which reports 72-82% on this dataset. Going higher without more data would cause overfitting."</div>
+    </div>
+  </div>
+
+  <div class="qa-card" data-q="preprocessing missing values zero imputation">
+    <div class="qa-q" onclick="toggleQA(this)">
+      <span class="qa-q-text">How did you handle missing values in both datasets?</span>
+      <span class="qa-tag tag-med">Medium</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-a">
+      <p><strong>PIMA Dataset:</strong> Zero values in Glucose, BloodPressure, SkinThickness, Insulin, and BMI are medically impossible — zero glucose or zero BMI cannot exist in a living person. So these zeros are actually missing data. I replaced them using mean imputation — the column mean of non-zero values.</p>
+      <p><strong>Framingham Dataset:</strong> Genuine NaN missing values in 7 columns including glucose (388 missing), education (105), and BPMeds (53). I used median imputation because some columns like cigsPerDay are skewed — the median is more robust than the mean for skewed distributions.</p>
+      <div class="tip-box">Importnat: StandardScaler was fitted only on training data, then applied to test data — this prevents data leakage.</div>
+    </div>
+  </div>
+
+  <div class="qa-card" data-q="train test split cross validation">
+    <div class="qa-q" onclick="toggleQA(this)">
+      <span class="qa-q-text">What is train-test split and cross validation?</span>
+      <span class="qa-tag tag-med">Medium</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-a">
+      <p><strong>Train-test split:</strong> I split the dataset 80% for training and 20% for testing. The model learns patterns from training data and is evaluated on test data it has never seen — this simulates real-world performance.</p>
+      <p><strong>5-fold cross validation:</strong> The training data is further split into 5 equal parts. The model is trained 5 times — each time using 4 parts for training and 1 part for validation. The average score across 5 runs gives a more reliable performance estimate than a single split.</p>
+      <p>My XGBoost achieved 87.26% cross-validation score for heart disease, confirming it's not overfitting.</p>
+      <div class="tip-box">I used stratify=y in the split to maintain the same class proportions in both train and test sets.</div>
+    </div>
+  </div>
+
+  <div class="qa-card" data-q="confusion matrix precision recall f1">
+    <div class="qa-q" onclick="toggleQA(this)">
+      <span class="qa-q-text">Explain confusion matrix, precision, recall, and F1-score</span>
+      <span class="qa-tag tag-hard">Hard</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-a">
+      <p><strong>Confusion Matrix</strong> shows 4 values: True Positive (correctly predicted disease), True Negative (correctly predicted healthy), False Positive (healthy predicted as diseased), False Negative (diseased predicted as healthy).</p>
+      <p><strong>Precision</strong> = TP / (TP + FP). Of all patients predicted diabetic, how many actually were? My diabetes model: 76.2%.</p>
+      <p><strong>Recall (Sensitivity)</strong> = TP / (TP + FN). Of all actual diabetic patients, how many did the model correctly detect? This is more important in medical screening — missing a diabetic patient is more dangerous than a false alarm.</p>
+      <p><strong>F1-Score</strong> = harmonic mean of Precision and Recall. A single balanced metric. My best F1 was 75.9% for diabetes.</p>
+      <div class="tip-box">In medical screening, Recall matters more than Precision. False negatives (missed diagnoses) are clinically more dangerous.</div>
+    </div>
+  </div>
+
+  <div class="qa-card" data-q="roc auc curve">
+    <div class="qa-q" onclick="toggleQA(this)">
+      <span class="qa-q-text">What is ROC-AUC and why did you use it?</span>
+      <span class="qa-tag tag-hard">Hard</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-a">
+      <p>ROC stands for Receiver Operating Characteristic curve. It plots True Positive Rate against False Positive Rate at all possible classification thresholds. AUC is the Area Under this Curve.</p>
+      <p>AUC of 0.5 = random classifier (no skill). AUC of 1.0 = perfect classifier. My heart disease model achieved AUC = 0.618, which is above random but reflects the challenge of severe class imbalance.</p>
+      <p>Interesting finding: Logistic Regression had the best AUC (0.697) even though XGBoost had the best accuracy (81.37%). This shows AUC and accuracy measure different things — AUC measures discrimination across all thresholds, while accuracy measures at a fixed threshold of 0.5.</p>
+    </div>
+  </div>
+
+  <div class="qa-card" data-q="standardscaler normalization scaling">
+    <div class="qa-q" onclick="toggleQA(this)">
+      <span class="qa-q-text">Why did you apply StandardScaler / feature scaling?</span>
+      <span class="qa-tag tag-med">Medium</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-a">
+      <p>Different features have very different scales. Glucose ranges 0-300 mg/dL, BMI ranges 0-70, Age ranges 21-80. Algorithms like SVM and KNN use distance calculations — without scaling, features with larger ranges would dominate the model.</p>
+      <p>StandardScaler transforms each feature to have zero mean and unit variance using the formula: z = (x - mean) / standard_deviation. This ensures all features contribute equally to the model.</p>
+      <p>Important: I fitted the scaler only on training data and applied it to test data — if I fitted on all data, the model would have information from the test set during training, causing data leakage.</p>
+    </div>
+  </div>
+
+  <div class="qa-card" data-q="logistic regression how does it work">
+    <div class="qa-q" onclick="toggleQA(this)">
+      <span class="qa-q-text">How does Logistic Regression work?</span>
+      <span class="qa-tag tag-med">Medium</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-a">
+      <p>Despite the name, Logistic Regression is a classification algorithm, not regression. It models the probability of the positive class using the sigmoid function, which maps any input to a value between 0 and 1.</p>
+      <p>It learns a set of weights — one for each feature — that maximise the likelihood of correct classification on training data. At inference time, if the predicted probability exceeds 0.5, the instance is classified as positive.</p>
+      <p>It is highly interpretable — the weight for each feature directly tells you its contribution to the log-odds of the outcome. This is why it is the standard baseline in clinical prediction modelling.</p>
+    </div>
+  </div>
+
+  <div class="qa-card" data-q="random forest ensemble how work">
+    <div class="qa-q" onclick="toggleQA(this)">
+      <span class="qa-q-text">How does Random Forest work?</span>
+      <span class="qa-tag tag-med">Medium</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-a">
+      <p>Random Forest builds many decision trees during training — I used 200 trees. Each tree is built on a random sample of the training data (bootstrapping) and uses a random subset of features at each split. This randomness prevents all trees from being identical.</p>
+      <p>For classification, each tree votes for a class. The final prediction is the majority vote across all trees. This averaging reduces variance and prevents overfitting compared to a single decision tree.</p>
+      <p>Random Forest also provides feature importance scores based on how much each feature reduces impurity across all trees.</p>
+    </div>
+  </div>
+
+  <div class="qa-card" data-q="svm support vector machine">
+    <div class="qa-q" onclick="toggleQA(this)">
+      <span class="qa-q-text">What is SVM and when is it useful?</span>
+      <span class="qa-tag tag-med">Medium</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-a">
+      <p>Support Vector Machine finds the optimal hyperplane that maximally separates the two classes in the feature space. The key idea is maximising the margin — the distance between the decision boundary and the nearest points from each class (support vectors).</p>
+      <p>I used the RBF (Radial Basis Function) kernel, which implicitly maps data into a higher-dimensional space where it may be linearly separable even if it is not in the original space.</p>
+      <p>SVM works well for high-dimensional data and when clear separation exists. It struggled on these datasets (72.73% for diabetes) likely because the data is not cleanly separable.</p>
+    </div>
+  </div>
+
+  <div class="qa-card" data-q="voting ensemble soft hard voting">
+    <div class="qa-q" onclick="toggleQA(this)">
+      <span class="qa-q-text">What is Voting Ensemble and why soft voting?</span>
+      <span class="qa-tag tag-med">Medium</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-a">
+      <p>A Voting Ensemble combines predictions from multiple models. Hard voting takes the majority class prediction. Soft voting averages the predicted probabilities from all models — this is more nuanced because it uses confidence information.</p>
+      <p>I used soft voting combining Logistic Regression, Random Forest, SVM, XGBoost, and Gradient Boosting. The idea is that different models capture different patterns — combining them should outperform any single model.</p>
+      <p>However, my Voting Ensemble (75.97% for diabetes) was slightly below XGBoost (76.62%), suggesting XGBoost alone was already near-optimal for this dataset.</p>
+    </div>
+  </div>
+
+  <div class="qa-card" data-q="knn k nearest neighbors">
+    <div class="qa-q" onclick="toggleQA(this)">
+      <span class="qa-q-text">How does KNN work and why k=7?</span>
+      <span class="qa-tag tag-easy">Easy</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-a">
+      <p>K-Nearest Neighbours classifies a new instance by finding the k most similar training instances in feature space (measured by Euclidean distance) and taking the majority class vote. With k=7 and distance weighting, closer neighbours have more influence than farther ones.</p>
+      <p>k=7 was chosen to reduce overfitting (small k causes high variance) while maintaining enough local information. Distance weighting was used instead of uniform weighting to give more influence to the nearest neighbours.</p>
+      <p>KNN requires no training phase — it simply stores all training data. But it is slow at prediction time and very sensitive to feature scaling, which is why StandardScaler was essential.</p>
+    </div>
+  </div>
+
+  <!-- PROJECT SPECIFIC -->
+  <div class="qa-card" data-q="unique contribution what makes project different">
+    <div class="qa-q" onclick="toggleQA(this)">
+      <span class="qa-q-text">What makes your project unique compared to existing work?</span>
+      <span class="qa-tag tag-med">Medium</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-a">
+      <p><strong>1. Unified multi-disease prediction:</strong> No existing undergraduate-level system simultaneously predicts both Diabetes and Coronary Heart Disease in one interface. Most published work addresses only one disease.</p>
+      <p><strong>2. 0-100 Risk Score:</strong> Instead of just 0 or 1, users get an intuitive risk score with three severity levels and personalised recommendations — much more actionable clinically.</p>
+      <p><strong>3. Validated feature engineering:</strong> My engineered feature age_risk scored importance 0.218, the highest of all features, empirically proving the value of clinical domain knowledge in feature creation.</p>
+      <p><strong>4. Full deployment:</strong> PDF report download, history tracking, interactive visualisations — a complete clinical decision support tool, not just a model.</p>
+    </div>
+  </div>
+
+  <div class="qa-card" data-q="why two datasets pima framingham">
+    <div class="qa-q" onclick="toggleQA(this)">
+      <span class="qa-q-text">Why did you choose these two specific datasets?</span>
+      <span class="qa-tag tag-easy">Easy</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-a">
+      <p><strong>PIMA Indians Diabetes Dataset:</strong> The most widely used benchmark for diabetes prediction research — used in over 85 studies reviewed by Kavakiotis et al. (2017). It contains 8 clinically relevant features from real patient data collected by the National Institute of Diabetes and Digestive and Kidney Diseases.</p>
+      <p><strong>Framingham Heart Study Dataset:</strong> From one of the most influential cardiovascular epidemiological studies in history, running since 1948. It provides 4,240 records with 15 clinical and lifestyle features — much richer than the PIMA dataset. It specifically targets 10-year CHD risk, making it ideal for long-term risk assessment.</p>
+    </div>
+  </div>
+
+  <div class="qa-card" data-q="web app streamlit how works deploy">
+    <div class="qa-q" onclick="toggleQA(this)">
+      <span class="qa-q-text">How does your web application work?</span>
+      <span class="qa-tag tag-easy">Easy</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-a">
+      <p>The web application is built using Streamlit — a Python library that converts Python scripts into interactive web apps without requiring web development knowledge.</p>
+      <p>At startup, the app loads the serialised model files (model.pkl) and scaler files (scaler.pkl) using Python's pickle library. When a user enters clinical parameters and clicks Predict, the app: assembles the inputs into a NumPy array, applies StandardScaler to normalise, calls the model's predict_proba method, converts the probability to a 0-100 risk score, and displays the result with Plotly gauge charts and personalised recommendations.</p>
+      <p>Additional features: PDF report download, prediction history tracking with trend charts, and history export as CSV.</p>
+    </div>
+  </div>
+
+  <div class="qa-card" data-q="clinical validation medical use disclaimer">
+    <div class="qa-q" onclick="toggleQA(this)">
+      <span class="qa-q-text">Can this system be used for actual medical diagnosis?</span>
+      <span class="qa-tag tag-easy">Easy</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-a">
+      <p>No — and this is clearly stated in the application disclaimer. The system is designed for educational and research purposes only. For clinical deployment, it would need prospective validation on independent patient populations, regulatory approval, and integration into formal clinical workflows.</p>
+      <p>However, it demonstrates the feasibility of AI-assisted clinical decision support and provides a proof-of-concept framework that could be extended and validated for real clinical use.</p>
+      <div class="tip-box">Always say this clearly — it shows academic integrity and awareness of limitations.</div>
+    </div>
+  </div>
+
+  <div class="qa-card" data-q="future work what would you add next">
+    <div class="qa-q" onclick="toggleQA(this)">
+      <span class="qa-q-text">What would you add if you had more time?</span>
+      <span class="qa-tag tag-easy">Easy</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-a">
+      <p>Six things: First, SHAP (SHapley Additive exPlanations) for explainable AI — showing clinicians exactly which features drove each individual prediction. Second, extend to more diseases like kidney disease and stroke. Third, deep learning with LSTM or CNN architectures. Fourth, cloud deployment on Streamlit Cloud or AWS for public access. Fifth, mobile app development using React Native. Sixth, integration with Electronic Health Record systems using HL7 FHIR protocol for automated data ingestion.</p>
+    </div>
+  </div>
+
+  <div class="qa-card" data-q="gradient boosting difference xgboost">
+    <div class="qa-q" onclick="toggleQA(this)">
+      <span class="qa-q-text">What is the difference between XGBoost and Gradient Boosting?</span>
+      <span class="qa-tag tag-hard">Hard</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-a">
+      <p>Both are boosting ensemble methods that build trees sequentially. The key differences are: XGBoost uses second-order gradient approximations (both gradient and Hessian), making it more mathematically precise. XGBoost has built-in L1 and L2 regularisation, tree pruning, and handles sparse data natively. XGBoost is also much faster — it uses parallelised tree construction.</p>
+      <p>Standard Gradient Boosting only uses first-order gradients and is typically slower. In my results, XGBoost outperformed Gradient Boosting slightly (81.37% vs 80.31% for heart disease), which reflects these architectural advantages.</p>
+    </div>
+  </div>
+
+  <div class="qa-card" data-q="overfitting underfitting bias variance">
+    <div class="qa-q" onclick="toggleQA(this)">
+      <span class="qa-q-text">What is overfitting? How did you prevent it?</span>
+      <span class="qa-tag tag-hard">Hard</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-a">
+      <p>Overfitting occurs when a model learns the training data too well — including its noise and random fluctuations — and fails to generalise to new data. An overfit model shows high training accuracy but poor test accuracy.</p>
+      <p>I prevented overfitting through: (1) Train-test split — evaluating on held-out data the model never saw during training. (2) 5-fold cross validation — multiple validation rounds on different subsets. (3) Regularisation parameters in XGBoost (max_depth=5, subsample=0.8, colsample_bytree=0.8) that limit tree complexity. (4) Random Forest with max_depth=8 to limit tree depth. (5) SMOTE to prevent the model from simply predicting the majority class.</p>
+    </div>
+  </div>
+
+  <div class="qa-card" data-q="pickle serialization model saving">
+    <div class="qa-q" onclick="toggleQA(this)">
+      <span class="qa-q-text">How did you save and load the trained model?</span>
+      <span class="qa-tag tag-easy">Easy</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-a">
+      <p>I used Python's pickle library to serialise the trained model object to disk as a binary file (model.pkl). I also saved the fitted StandardScaler separately (scaler.pkl) because the same scaling transformation used during training must be applied to new inputs at inference time.</p>
+      <p>When the Streamlit app starts, it loads both files using pickle.load(). This means the model only needs to be trained once — subsequent predictions are instantaneous without retraining.</p>
+      <div class="tip-box">Important: The scaler must be saved and loaded separately — if you scale new data differently from training data, all predictions will be wrong.</div>
+    </div>
+  </div>
+
+  </div>
+</div>
+
+<!-- TERMINOLOGY SECTION -->
+<div class="section" id="terms">
+  <input class="search-box" placeholder="Search terms..." id="term-search" oninput="filterTerms()" />
+
+  <div class="cat-filter">
+    <button class="cat-btn active" onclick="filterCat('all', this)">All</button>
+    <button class="cat-btn" onclick="filterCat('ml', this)">ML Algorithms</button>
+    <button class="cat-btn" onclick="filterCat('stat', this)">Statistics & Metrics</button>
+    <button class="cat-btn" onclick="filterCat('data', this)">Data Processing</button>
+    <button class="cat-btn" onclick="filterCat('med', this)">Medical / Clinical</button>
+    <button class="cat-btn" onclick="filterCat('app', this)">Tools & Libraries</button>
+  </div>
+
+  <div class="term-grid" id="term-grid">
+
+    <!-- ML -->
+    <div class="term-card" data-cat="ml" data-name="supervised learning">
+      <div class="term-name">Supervised Learning</div>
+      <span class="term-cat cat-ml">ML Algorithm</span>
+      <div class="term-def">A type of machine learning where the model learns from labelled data — input features paired with known output labels. The model learns to map inputs to outputs.</div>
+      <div class="term-ex">Example: Training on patient data where we know who has diabetes (label = 1) and who does not (label = 0).</div>
+    </div>
+
+    <div class="term-card" data-cat="ml" data-name="classification">
+      <div class="term-name">Classification</div>
+      <span class="term-cat cat-ml">ML Algorithm</span>
+      <div class="term-def">A supervised learning task where the output is a discrete category. Binary classification has two classes (0 or 1). The model assigns each input to one class.</div>
+      <div class="term-ex">Example: Predicting Diabetic (1) or Non-Diabetic (0) from clinical measurements.</div>
+    </div>
+
+    <div class="term-card" data-cat="ml" data-name="logistic regression">
+      <div class="term-name">Logistic Regression</div>
+      <span class="term-cat cat-ml">ML Algorithm</span>
+      <div class="term-def">A linear classification algorithm that models the probability of the positive class using the sigmoid function. Despite the name, it is used for classification, not regression.</div>
+      <div class="term-ex">My result: 71.43% accuracy on diabetes, 66.98% on heart disease.</div>
+    </div>
+
+    <div class="term-card" data-cat="ml" data-name="random forest">
+      <div class="term-name">Random Forest</div>
+      <span class="term-cat cat-ml">ML Algorithm</span>
+      <div class="term-def">An ensemble of decision trees. Each tree is built on a random sample of data and features. Final prediction is the majority vote across all trees. Reduces overfitting.</div>
+      <div class="term-ex">I used 200 trees. Result: 74.68% (diabetes), 73.58% (heart disease).</div>
+    </div>
+
+    <div class="term-card" data-cat="ml" data-name="xgboost extreme gradient boosting">
+      <div class="term-name">XGBoost</div>
+      <span class="term-cat cat-ml">ML Algorithm</span>
+      <div class="term-def">Extreme Gradient Boosting. Builds trees sequentially — each tree corrects errors of the previous. Uses second-order gradients and regularisation. Best model in my project.</div>
+      <div class="term-ex">Best results: 76.62% (diabetes), 81.37% (heart disease). CV: 87.26%.</div>
+    </div>
+
+    <div class="term-card" data-cat="ml" data-name="svm support vector machine kernel rbf">
+      <div class="term-name">Support Vector Machine (SVM)</div>
+      <span class="term-cat cat-ml">ML Algorithm</span>
+      <div class="term-def">Finds the optimal separating hyperplane that maximises the margin between classes. I used RBF (Radial Basis Function) kernel for non-linear classification.</div>
+      <div class="term-ex">Result: 72.73% (diabetes), 68.75% (heart disease).</div>
+    </div>
+
+    <div class="term-card" data-cat="ml" data-name="knn k nearest neighbors">
+      <div class="term-name">K-Nearest Neighbours (KNN)</div>
+      <span class="term-cat cat-ml">ML Algorithm</span>
+      <div class="term-def">Classifies by finding the k most similar training instances and taking majority vote. Non-parametric — no training phase, just stores all data. Sensitive to feature scaling.</div>
+      <div class="term-ex">I used k=7 with distance weighting. Result: 68.83% (diabetes).</div>
+    </div>
+
+    <div class="term-card" data-cat="ml" data-name="gradient boosting">
+      <div class="term-name">Gradient Boosting</div>
+      <span class="term-cat cat-ml">ML Algorithm</span>
+      <div class="term-def">Sequential ensemble that builds shallow decision trees, each correcting the residual errors of the previous ensemble. Uses first-order gradients.</div>
+      <div class="term-ex">I used 300 estimators, learning rate 0.05. Result: 80.31% (heart disease).</div>
+    </div>
+
+    <div class="term-card" data-cat="ml" data-name="voting ensemble soft hard">
+      <div class="term-name">Voting Ensemble</div>
+      <span class="term-cat cat-ml">ML Algorithm</span>
+      <div class="term-def">Combines predictions from multiple models. Soft voting averages probability outputs — used in my project. Hard voting takes the majority class prediction.</div>
+      <div class="term-ex">Combined LR + RF + SVM + XGBoost + GB. Result: 75.97% (diabetes).</div>
+    </div>
+
+    <div class="term-card" data-cat="ml" data-name="overfitting underfitting regularisation">
+      <div class="term-name">Overfitting</div>
+      <span class="term-cat cat-ml">ML Algorithm</span>
+      <div class="term-def">When a model learns training data too specifically — including noise — and fails to generalise. Shown by high training accuracy but low test accuracy. Prevented by regularisation, cross-validation, and limiting model complexity.</div>
+    </div>
+
+    <div class="term-card" data-cat="ml" data-name="feature importance">
+      <div class="term-name">Feature Importance</div>
+      <span class="term-cat cat-ml">ML Algorithm</span>
+      <div class="term-def">A score showing how much each feature contributed to the model's predictions. In Random Forest and XGBoost, calculated based on how much each feature reduces impurity across all trees.</div>
+      <div class="term-ex">My engineered age_risk scored 0.218 — highest of all 19 features.</div>
+    </div>
+
+    <!-- STATISTICS -->
+    <div class="term-card" data-cat="stat" data-name="accuracy">
+      <div class="term-name">Accuracy</div>
+      <span class="term-cat cat-stat">Metric</span>
+      <div class="term-def">Proportion of correctly classified instances out of all instances. Formula: (TP + TN) / Total. Can be misleading with class imbalance.</div>
+      <div class="term-ex">XGBoost diabetes accuracy: 76.62% means 118 of 154 test patients correctly classified.</div>
+    </div>
+
+    <div class="term-card" data-cat="stat" data-name="precision positive predictive value">
+      <div class="term-name">Precision</div>
+      <span class="term-cat cat-stat">Metric</span>
+      <div class="term-def">Of all instances predicted positive, what fraction actually are positive? Formula: TP / (TP + FP). Also called Positive Predictive Value.</div>
+      <div class="term-ex">Precision 76.2% means of all patients predicted diabetic, 76.2% actually were diabetic.</div>
+    </div>
+
+    <div class="term-card" data-cat="stat" data-name="recall sensitivity">
+      <div class="term-name">Recall (Sensitivity)</div>
+      <span class="term-cat cat-stat">Metric</span>
+      <div class="term-def">Of all actual positive instances, what fraction did the model detect? Formula: TP / (TP + FN). Critical in medical screening — missing disease (FN) is more dangerous than a false alarm (FP).</div>
+    </div>
+
+    <div class="term-card" data-cat="stat" data-name="f1 score harmonic mean">
+      <div class="term-name">F1-Score</div>
+      <span class="term-cat cat-stat">Metric</span>
+      <div class="term-def">The harmonic mean of Precision and Recall. Formula: 2 × (Precision × Recall) / (Precision + Recall). Balances both metrics in one number. More informative than accuracy when classes are imbalanced.</div>
+    </div>
+
+    <div class="term-card" data-cat="stat" data-name="roc auc area under curve">
+      <div class="term-name">ROC-AUC</div>
+      <span class="term-cat cat-stat">Metric</span>
+      <div class="term-def">Area Under the Receiver Operating Characteristic Curve. Measures ability to discriminate between classes at all thresholds. 0.5 = random, 1.0 = perfect. My best: Logistic Regression AUC = 0.697 (heart disease).</div>
+    </div>
+
+    <div class="term-card" data-cat="stat" data-name="confusion matrix tp tn fp fn">
+      <div class="term-name">Confusion Matrix</div>
+      <span class="term-cat cat-stat">Metric</span>
+      <div class="term-def">A 2×2 table showing True Positives, True Negatives, False Positives, and False Negatives. Provides a complete picture of model performance beyond a single accuracy number.</div>
+      <div class="term-ex">Diabetes XGBoost: TN=77, TP=41, FP=23, FN=13 (out of 154 test patients).</div>
+    </div>
+
+    <div class="term-card" data-cat="stat" data-name="cross validation 5 fold">
+      <div class="term-name">5-Fold Cross Validation</div>
+      <span class="term-cat cat-stat">Metric</span>
+      <div class="term-def">Training data split into 5 parts. Model trained 5 times — each time using 4 parts for training, 1 for validation. Average of 5 scores gives robust performance estimate.</div>
+      <div class="term-ex">XGBoost heart disease CV score: 87.26% — confirms it is not overfitting.</div>
+    </div>
+
+    <div class="term-card" data-cat="stat" data-name="class imbalance">
+      <div class="term-name">Class Imbalance</div>
+      <span class="term-cat cat-stat">Concept</span>
+      <div class="term-def">When one class significantly outnumbers the other in the training data. Can cause the model to be biased towards the majority class, achieving high accuracy by simply always predicting the dominant class.</div>
+      <div class="term-ex">Framingham: 84.8% No CHD vs 15.2% CHD Risk — severe imbalance requiring SMOTE correction.</div>
+    </div>
+
+    <!-- DATA -->
+    <div class="term-card" data-cat="data" data-name="smote synthetic minority oversampling">
+      <div class="term-name">SMOTE</div>
+      <span class="term-cat cat-data">Data Processing</span>
+      <div class="term-def">Synthetic Minority Oversampling Technique. Generates new synthetic minority class samples by interpolating between existing minority samples in feature space. Applied only to training data to avoid leakage.</div>
+    </div>
+
+    <div class="term-card" data-cat="data" data-name="mean imputation missing values">
+      <div class="term-name">Mean Imputation</div>
+      <span class="term-cat cat-data">Data Processing</span>
+      <div class="term-def">Replacing missing or invalid values with the column mean. Used for PIMA dataset where zero values in Glucose, BMI etc. are medically impossible — they represent missing data.</div>
+    </div>
+
+    <div class="term-card" data-cat="data" data-name="standardscaler normalization feature scaling">
+      <div class="term-name">StandardScaler (Feature Scaling)</div>
+      <span class="term-cat cat-data">Data Processing</span>
+      <div class="term-def">Transforms features to zero mean and unit variance. Formula: z = (x - μ) / σ. Essential for distance-based algorithms (SVM, KNN). Fitted on training data only to prevent data leakage.</div>
+    </div>
+
+    <div class="term-card" data-cat="data" data-name="train test split 80 20">
+      <div class="term-name">Train-Test Split</div>
+      <span class="term-cat cat-data">Data Processing</span>
+      <div class="term-def">Dividing dataset into training (80%) and test (20%) subsets. Model learns from training data and is evaluated on unseen test data. Stratified split maintains class proportions in both subsets.</div>
+    </div>
+
+    <div class="term-card" data-cat="data" data-name="feature engineering">
+      <div class="term-name">Feature Engineering</div>
+      <span class="term-cat cat-data">Data Processing</span>
+      <div class="term-def">Creating new input features from existing data using domain knowledge. Improves model performance by providing more meaningful representations. My 4 engineered features improved heart disease prediction.</div>
+    </div>
+
+    <div class="term-card" data-cat="data" data-name="eda exploratory data analysis">
+      <div class="term-name">EDA — Exploratory Data Analysis</div>
+      <span class="term-cat cat-data">Data Processing</span>
+      <div class="term-def">Statistical analysis and visualisation of data before modelling. Includes distribution analysis, correlation analysis, outlier detection. Helps understand data quality and feature relationships.</div>
+    </div>
+
+    <div class="term-card" data-cat="data" data-name="data leakage">
+      <div class="term-name">Data Leakage</div>
+      <span class="term-cat cat-data">Data Processing</span>
+      <div class="term-def">When information from the test set accidentally influences model training. Leads to artificially high accuracy that doesn't reflect real performance. Prevented by fitting scaler and SMOTE only on training data.</div>
+    </div>
+
+    <div class="term-card" data-cat="data" data-name="correlation heatmap pearson">
+      <div class="term-name">Pearson Correlation</div>
+      <span class="term-cat cat-data">Data Processing</span>
+      <div class="term-def">Measures linear relationship between two variables, ranging from -1 to +1. In my project, Glucose had the highest correlation with Diabetes outcome (r = 0.47), confirming its clinical importance.</div>
+    </div>
+
+    <!-- MEDICAL -->
+    <div class="term-card" data-cat="med" data-name="diabetes mellitus type 2">
+      <div class="term-name">Diabetes Mellitus (Type 2)</div>
+      <span class="term-cat cat-med">Medical</span>
+      <div class="term-def">Chronic metabolic disorder characterised by persistent high blood glucose (hyperglycaemia) due to insulin resistance or insufficient insulin production. Accounts for 90%+ of all diabetes cases.</div>
+    </div>
+
+    <div class="term-card" data-cat="med" data-name="chd coronary heart disease">
+      <div class="term-name">Coronary Heart Disease (CHD)</div>
+      <span class="term-cat cat-med">Medical</span>
+      <div class="term-def">Narrowing or blockage of coronary arteries due to atherosclerotic plaque buildup. Leading cause of death globally. Manifests as angina, heart attack (myocardial infarction), or sudden cardiac death.</div>
+    </div>
+
+    <div class="term-card" data-cat="med" data-name="bmi body mass index">
+      <div class="term-name">BMI — Body Mass Index</div>
+      <span class="term-cat cat-med">Medical</span>
+      <div class="term-def">Weight (kg) / Height² (m²). WHO categories: Below 18.5 = Underweight, 18.5-24.9 = Normal, 25-29.9 = Overweight, 30+ = Obese. A key risk factor for both diabetes and heart disease.</div>
+    </div>
+
+    <div class="term-card" data-cat="med" data-name="glucose plasma blood sugar ogtt">
+      <div class="term-name">Plasma Glucose (OGTT)</div>
+      <span class="term-cat cat-med">Medical</span>
+      <div class="term-def">Blood glucose measured 2 hours after consuming a glucose solution (Oral Glucose Tolerance Test). The most discriminative feature in my diabetes model (r = 0.47 with outcome).</div>
+    </div>
+
+    <div class="term-card" data-cat="med" data-name="pulse pressure systolic diastolic">
+      <div class="term-name">Pulse Pressure (Engineered Feature)</div>
+      <span class="term-cat cat-med">Medical</span>
+      <div class="term-def">Systolic BP − Diastolic BP. A validated marker of arterial stiffness and cardiovascular risk. Elevated pulse pressure (>60 mm Hg) is associated with increased CHD risk. I created this as a new feature.</div>
+    </div>
+
+    <div class="term-card" data-cat="med" data-name="diabetes pedigree function genetic">
+      <div class="term-name">Diabetes Pedigree Function</div>
+      <span class="term-cat cat-med">Medical</span>
+      <div class="term-def">A score in the PIMA dataset representing the probability of diabetes based on family history and genetic relatedness. Higher values indicate stronger family history of diabetes.</div>
+    </div>
+
+    <div class="term-card" data-cat="med" data-name="hypertension blood pressure bp">
+      <div class="term-name">Hypertension</div>
+      <span class="term-cat cat-med">Medical</span>
+      <div class="term-def">Chronically elevated blood pressure. A major modifiable risk factor for CHD. Normal: below 120/80 mm Hg. Hypertension: above 130/80 mm Hg. In Framingham dataset, prevalentHyp is a binary feature.</div>
+    </div>
+
+    <!-- TOOLS -->
+    <div class="term-card" data-cat="app" data-name="streamlit web app python">
+      <div class="term-name">Streamlit</div>
+      <span class="term-cat cat-app">Tool</span>
+      <div class="term-def">Open-source Python library for building interactive web applications without web development knowledge. Converts Python scripts to browser-based apps. Used for my multi-disease predictor deployment.</div>
+    </div>
+
+    <div class="term-card" data-cat="app" data-name="scikit-learn sklearn">
+      <div class="term-name">Scikit-learn</div>
+      <span class="term-cat cat-app">Tool</span>
+      <div class="term-def">The primary Python machine learning library. Provides implementations of all standard ML algorithms, preprocessing tools (StandardScaler), model evaluation metrics, and cross-validation utilities.</div>
+    </div>
+
+    <div class="term-card" data-cat="app" data-name="pickle serialization model saving">
+      <div class="term-name">Pickle (Model Serialisation)</div>
+      <span class="term-cat cat-app">Tool</span>
+      <div class="term-def">Python's built-in library for serialising (saving) Python objects to binary files. Used to save trained models (model.pkl) and scalers (scaler.pkl) for loading in the web application without retraining.</div>
+    </div>
+
+    <div class="term-card" data-cat="app" data-name="pandas numpy data manipulation">
+      <div class="term-name">Pandas & NumPy</div>
+      <span class="term-cat cat-app">Tool</span>
+      <div class="term-def">Pandas: Python library for data manipulation using DataFrames — loading CSV, cleaning, filtering, EDA. NumPy: numerical computing library for array operations and mathematical calculations.</div>
+    </div>
+
+    <div class="term-card" data-cat="app" data-name="plotly visualization charts">
+      <div class="term-name">Plotly</div>
+      <span class="term-cat cat-app">Tool</span>
+      <div class="term-def">Interactive visualisation library used in my Streamlit app. Creates gauge charts, bar charts, and trend charts. Used instead of Matplotlib because Matplotlib had DLL loading issues on Windows.</div>
+    </div>
+
+    <div class="term-card" data-cat="app" data-name="imbalanced learn imblearn smote">
+      <div class="term-name">imbalanced-learn</div>
+      <span class="term-cat cat-app">Tool</span>
+      <div class="term-def">Python library specifically for handling class imbalance. Provides SMOTE and many other resampling techniques. Used to balance the Framingham dataset's 85:15 class distribution before training.</div>
+    </div>
+
+    <div class="term-card" data-cat="app" data-name="jupyter notebook">
+      <div class="term-name">Jupyter Notebook</div>
+      <span class="term-cat cat-app">Tool</span>
+      <div class="term-def">Interactive development environment for Python. Allows mixing code, output, and markdown in one document. Used for all data exploration, preprocessing, model training, and visualisation tasks.</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function showTab(tab) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(tab).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function toggleQA(el) {
+  const ans = el.nextElementSibling;
+  const arr = el.querySelector('.qa-arrow');
+  const isOpen = ans.classList.contains('open');
+  document.querySelectorAll('.qa-a.open').forEach(a => {
+    a.classList.remove('open');
+    a.previousElementSibling.querySelector('.qa-arrow').textContent = '▼';
+  });
+  if (!isOpen) {
+    ans.classList.add('open');
+    arr.textContent = '▲';
+  }
+}
+
+function filterQA() {
+  const q = document.getElementById('qa-search').value.toLowerCase();
+  document.querySelectorAll('.qa-card').forEach(card => {
+    const text = card.dataset.q + ' ' + card.textContent.toLowerCase();
+    card.style.display = text.includes(q) ? 'block' : 'none';
+  });
+}
+
+let activeCat = 'all';
+function filterCat(cat, btn) {
+  activeCat = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyTermFilters();
+}
+
+function filterTerms() { applyTermFilters(); }
+
+function applyTermFilters() {
+  const q = (document.getElementById('term-search').value || '').toLowerCase();
+  document.querySelectorAll('.term-card').forEach(card => {
+    const catMatch = activeCat === 'all' || card.dataset.cat === activeCat;
+    const textMatch = !q || card.dataset.name.includes(q) || card.textContent.toLowerCase().includes(q);
+    card.style.display = (catMatch && textMatch) ? 'block' : 'none';
+  });
+}
+</script>
